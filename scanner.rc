@@ -1,0 +1,60 @@
+#!/bin/bash
+
+
+log_error() {
+    zenity --error --text="$1"
+}
+
+run_scan() {
+    local subnet="$1"
+    local scan_type="$2"
+    local output_dir="$3"
+    local background="$4"
+    local results=""
+    local hosts=()
+    local total=0
+    local count=0
+
+    (sleep 1) | zenity --info --no-wrap --text="Trwa skanowanie sieci...\nProszę czekać." --title="Skanowanie" &
+    local info_pid=$!
+
+    if [[ "$scan_type" == "Skan hostów (host discovery)" ]]; then
+        IFS=$'\n' read -d '' -r -a hosts < <(nmap -sn "$subnet" | grep "Nmap scan report for" | awk '{print $5}' && printf '\0')
+        total=${#hosts[@]}
+        if [[ $total -eq 0 ]]; then
+            results="Nie znaleziono żadnych aktywnych hostów w podsieci $subnet."
+        else
+            results="Aktywne hosty w podsieci $subnet:\n"
+            for ip in "${hosts[@]}"; do
+                ((count++))
+                results+="$count. $ip\n"
+            done
+        fi
+    else
+        nmap -sn "$subnet" | grep "Nmap scan report for" | awk '{print $5}' > /tmp/active_hosts.txt
+        mapfile -t hosts < /tmp/active_hosts.txt
+        total=${#hosts[@]}
+        if [[ $total -eq 0 ]]; then
+            results="Nie znaleziono żadnych aktywnych hostów w podsieci $subnet."
+        else
+            for ip in "${hosts[@]}"; do
+                ((count++))
+                results+="Skanowanie portów $ip ($count/$total):\n"
+                results+="$(nmap -Pn "$ip")\n\n"
+            done
+        fi
+    fi
+
+    kill $info_pid 2>/dev/null
+    sleep 0.2
+
+    echo -e "$results" | zenity --text-info --title="Wyniki skanowania" --width=800 --height=600
+
+    if zenity --question --text="Czy chcesz zapisać wyniki do pliku?"; then
+        local file
+        file=$(zenity --file-selection --save --confirm-overwrite --title="Zapisz raport" --filename="$output_dir/scan_report.txt")
+        [[ $? -ne 0 ]] && return
+        echo -e "$results" > "$file"
+        zenity --info --text="Wyniki zapisane do $file"
+    fi
+}

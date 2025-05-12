@@ -1,0 +1,86 @@
+.TH NETWORK 1 "czerwiec 2024" "Wersja 1.0" "Network Scanner Manual"
+.SH NAZWA
+network \- graficzny i terminalowy skaner sieci lokalnej z interfejsem Zenity lub CLI
+.SH SKŁADNIA
+.B network
+.RI [ opcje ]
+.SH OPIS
+.B Zenity Network Scanner
+to narzędzie do skanowania sieci lokalnej i portów z wykorzystaniem graficznych okien dialogowych Zenity lub trybu terminalowego. Pozwala wykrywać aktywne hosty, skanować porty, generować raporty oraz zarządzać konfiguracją przez GUI lub CLI.
+
+Wszystkie interakcje użytkownika mogą odbywać się przez Zenity (GUI) lub przez argumenty w terminalu (CLI). Wyniki skanowania mogą być wyświetlane na ekranie, a po zakończeniu skanowania użytkownik może zdecydować o zapisaniu ich do pliku.
+
+Plik konfiguracyjny (config.rc) może zawierać domyślne wartości SUBNET i SCAN_TYPE. Jeśli nie podasz tych wartości przez argumenty, zostaną one pobrane z pliku konfiguracyjnego.
+.SH OPCJE
+.TP
+.BR -c " " \fIplik_konfig\fR
+Wczytaj ustawienia z pliku konfiguracyjnego.
+.TP
+.B -b
+Uruchom skanowanie w tle (tylko GUI).
+.TP
+.B -h
+Wyświetl pomoc.
+.TP
+.B -v
+Wyświetl wersję programu.
+.TP
+.BR -s " " \fIsubnet\fR
+Adres podsieci do skanowania (tryb CLI).
+.TP
+.BR -t " " \fItyp\fR
+Typ skanowania: host (host discovery) lub port (port scan) (tryb CLI).
+.TP
+.BR -p " " \fIpolecenie\fR
+Polecenie: ping lub traceroute (tryb CLI).
+.TP
+.BR -a " " \fIadres\fR
+Adres do polecenia ping/traceroute (tryb CLI).
+.TP
+.BR -f " " \fIplik\fR
+Plik do zapisu wyniku (tryb CLI, opcjonalny).
+.SH PRZYKŁADY
+.TP
+Uruchomienie skanowania z zapisanej konfiguracji (GUI):
+.B network -c config.rc
+.TP
+Uruchomienie aplikacji z GUI bez argumentów:
+.B network
+.TP
+Skanowanie w tle (GUI):
+.B network -b
+.TP
+Wyświetlenie pomocy:
+.B network -h
+.TP
+Skanowanie hostów w trybie CLI i zapis do pliku:
+.B network -s 192.168.1.0/24 -t host -f wynik.txt
+.TP
+Skanowanie portów w trybie CLI:
+.B network -s 192.168.1.0/24 -t port
+.TP
+Ping w trybie CLI:
+.B network -p ping -a 8.8.8.8 -f ping.txt
+.TP
+Traceroute w trybie CLI:
+.B network -p traceroute -a 8.8.8.8
+.TP
+Wyświetlenie raportu przez Zenity:
+.B zenity --text-info --filename=scan_report.txt
+.TP
+Wyświetlenie instrukcji (man) z menu głównego GUI.
+.SH PLIKI
+.TP
+.I config.rc
+Przykładowy plik konfiguracyjny:
+.nf
+SUBNET="192.168.1.0/24"
+SCAN_TYPE="Skan hostów (host discovery)"
+.fi
+.SH AUTORZY
+Igor J. i współtwórcy.
+.SH ZOBACZ TAKŻE
+.BR nmap (1),
+.BR ping (8),
+.BR traceroute (8),
+.BR zenity (1) 
