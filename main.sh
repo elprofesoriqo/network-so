@@ -47,7 +47,7 @@ parse_args() {
         esac
     done
 
-    # Tryb bez GUI: jeśli podano komplet argumentów do polecenia lub skanowania
+
     if [[ -n "$POLECENIE" && -n "$ADRES" ]]; then
         local result=""
         if [[ "$POLECENIE" == "ping" ]]; then
@@ -124,7 +124,7 @@ config_window() {
 
 main_menu() {
     while true; do
-        MAIN_CHOICE=$(zenity --list --title="Zenity Network Scanner" --column="Wybierz sekcję" --height=250 \
+        MAIN_CHOICE=$(zenity --list --title="Network Scanner" --column="Wybierz sekcję" --height=250 \
             "Skan sieci" "Polecenia" "Instrukcja (man)")
         case "$MAIN_CHOICE" in
             "Skan sieci")
