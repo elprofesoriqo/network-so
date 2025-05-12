@@ -1,8 +1,0 @@
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-05-12 19:44 CEST
-Stats: 0:01:08 elapsed; 0 hosts completed (0 up), 256 undergoing Ping Scan
-Ping Scan Timing: About 59.57% done; ETC: 19:46 (0:00:46 remaining)
-Stats: 0:01:11 elapsed; 0 hosts completed (0 up), 256 undergoing Ping Scan
-Ping Scan Timing: About 62.50% done; ETC: 19:46 (0:00:43 remaining)
-Stats: 0:01:14 elapsed; 0 hosts completed (0 up), 256 undergoing Ping Scan
-Ping Scan Timing: About 65.43% done; ETC: 19:46 (0:00:39 remaining)
-Nmap done: 256 IP addresses (0 hosts up) scanned in 114.87 seconds

@@ -154,12 +154,15 @@ command_menu() {
             "Ping" "Traceroute" "Powrót")
         case "$CMD_CHOICE" in
             "Ping")
+                # Pobiera adres IP lub host od użytkownika
                 local host
                 host=$(zenity --entry --title="Ping" --text="Podaj adres IP lub nazwę hosta do sprawdzenia:")
-                [[ $? -ne 0 || -z "$host" ]] && continue
+                [[ $? -ne 0 || -z "$host" ]] && continue # jesli nie tak to wróć do menu
+                # Wykonanie polecenia
                 local ping_result
                 ping_result=$(ping -c 4 "$host" 2>&1)
                 echo "$ping_result" | zenity --text-info --title="Wynik polecenia ping" --width=700 --height=400
+                # Zapytaj, czy zapisać wynik do pliku
                 if zenity --question --text="Czy chcesz zapisać wynik do pliku?"; then
                     local file
                     file=$(zenity --file-selection --save --confirm-overwrite --title="Zapisz wynik" --filename="ping_result.txt")
@@ -172,6 +175,7 @@ command_menu() {
                 local host
                 host=$(zenity --entry --title="Traceroute" --text="Podaj adres IP lub nazwę hosta do sprawdzenia trasy:")
                 [[ $? -ne 0 || -z "$host" ]] && continue
+                # Wykonanie polecenia
                 local trace_result
                 trace_result=$(traceroute "$host" 2>&1)
                 echo "$trace_result" | zenity --text-info --title="Wynik polecenia traceroute" --width=700 --height=500

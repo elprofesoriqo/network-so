@@ -6,19 +6,21 @@ log_error() {
 }
 
 run_scan() {
-    local subnet="$1"
-    local scan_type="$2"
+    local subnet="$1"           
+    local scan_type="$2"        # Typ skanowania (host discovery lub port scan)
     local output_dir="$3"
-    local background="$4"
-    local results=""
-    local hosts=()
-    local total=0
-    local count=0
+    local background="$4"       # Flaga trybu w tle
+    local results=""            
+    local hosts=()               
+    local total=0                
+    local count=0              
 
     (sleep 1) | zenity --info --no-wrap --text="Trwa skanowanie sieci...\nProszę czekać." --title="Skanowanie" &
     local info_pid=$!
 
+    # Wybór trybu skanowania
     if [[ "$scan_type" == "Skan hostów (host discovery)" ]]; then
+        # Skanowanie hostów w podsieci
         IFS=$'\n' read -d '' -r -a hosts < <(nmap -sn "$subnet" | grep "Nmap scan report for" | awk '{print $5}' && printf '\0')
         total=${#hosts[@]}
         if [[ $total -eq 0 ]]; then
@@ -31,6 +33,7 @@ run_scan() {
             done
         fi
     else
+        # Skanowanie portów na aktywnych hostach
         nmap -sn "$subnet" | grep "Nmap scan report for" | awk '{print $5}' > /tmp/active_hosts.txt
         mapfile -t hosts < /tmp/active_hosts.txt
         total=${#hosts[@]}
